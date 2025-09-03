@@ -2,9 +2,6 @@
   "name": "testdb",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-    "start": "node api/index.js"
-  },
   "dependencies": {
     "mongoose": "^7.6.0"
   }
