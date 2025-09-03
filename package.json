@@ -1,7 +1,11 @@
 {
-  "name": "iot-vercel",
+  "name": "testdb",
   "version": "1.0.0",
+  "type": "module",   // 👈 thêm dòng này
+  "scripts": {
+    "start": "node api/index.js"
+  },
   "dependencies": {
-    "mongoose": "^7.6.3"
+    "mongoose": "^7.6.0"
   }
 }
