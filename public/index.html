@@ -7,54 +7,15 @@
 <body>
   <h1>ESP32 Sensor Data</h1>
   <button onclick="loadData()">Refresh</button>
-  <div id="data"></div>
+  <pre id="output"></pre>
 
   <script>
     async function loadData() {
-      try {
-        const res = await fetch("/api/pairs");
-        const pairs = await res.json();
-
-        const container = document.getElementById("data");
-        container.innerHTML = "";
-
-        if (pairs.length === 0) {
-          container.textContent = "Không có dữ liệu";
-          return;
-        }
-
-        const table = document.createElement("table");
-        table.border = "1";
-        table.cellPadding = "8";
-        table.style.marginTop = "20px";
-
-        // Header
-        const header = table.insertRow();
-        ["Nhiệt độ (°C)", "Độ ẩm (%)", "Thời gian"].forEach(text => {
-          const th = document.createElement("th");
-          th.textContent = text;
-          header.appendChild(th);
-        });
-
-        // Rows
-        pairs.forEach(p => {
-          const row = table.insertRow();
-          const tCell = row.insertCell();
-          tCell.textContent = p.temperature;
-          const hCell = row.insertCell();
-          hCell.textContent = p.humidity;
-          const timeCell = row.insertCell();
-          timeCell.textContent = new Date(p.time).toLocaleString();
-        });
-
-        container.appendChild(table);
-      } catch (err) {
-        console.error("Lỗi fetch data:", err);
-        document.getElementById("data").textContent = "Lỗi khi lấy dữ liệu";
-      }
+      const res = await fetch("/api/pairs");
+      const data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
     }
 
-    // Load data ngay khi trang mở
     loadData();
   </script>
 </body>
