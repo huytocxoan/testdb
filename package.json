@@ -1,7 +1,7 @@
 {
   "name": "testdb",
   "version": "1.0.0",
-  "type": "module",   // 👈 thêm dòng này
+  "type": "module",
   "scripts": {
     "start": "node api/index.js"
   },
