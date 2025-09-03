@@ -1,78 +1,22 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Bảng dữ liệu cảm biến - Pairs</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background:#f7f7f7; }
-    h1 { text-align: center; color: #222; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    th { background: #007bff; color: #fff; }
-    tr:nth-child(even) { background: #f4f4f4; }
-    .small { font-size: 0.9em; color: #555; }
-  </style>
+  <meta charset="UTF-8">
+  <title>ESP32 Sensor Dashboard</title>
 </head>
 <body>
-  <h1>Dữ liệu cảm biến </h1>
-
-  <table id="pairTable">
-    <thead>
-      <tr>
-        <th>STT</th>
-        <th>Nhiệt độ (°C)</th>
-        <th>Độ ẩm (%)</th>
-        <th>Thời gian</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- rows will be inserted here -->
-    </tbody>
-  </table>
+  <h1>ESP32 Sensor Data</h1>
+  <button onclick="loadData()">Refresh</button>
+  <pre id="output"></pre>
 
   <script>
-    async function loadPairs() {
-      try {
-        const res = await fetch('/pairs');
-        const pairs = await res.json();
-
-        const tbody = document.querySelector('#pairTable tbody');
-        tbody.innerHTML = '';
-
-        // pairs[0] là cặp mới nhất theo server (đã sắp xếp)
-        for (let i = 0; i < pairs.length; i++) {
-          const p = pairs[i];
-          // đánh số theo thứ tự 1 = mới nhất
-          const index = i + 1;
-          // xử lý thời gian
-          const timeVal = p.time ? new Date(p.time) : null;
-          const timeStr = timeVal && !isNaN(timeVal) ? timeVal.toLocaleString('vi-VN', { hour12: false }) : '—';
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${index}</td>
-            <td>${(p.temperature !== undefined && p.temperature !== null) ? p.temperature : '—'}</td>
-            <td>${(p.humidity !== undefined && p.humidity !== null) ? p.humidity : '—'}</td>
-            <td class="small">${timeStr}</td>
-          `;
-          tbody.appendChild(tr);
-        }
-
-        // nếu ít hơn 5 cặp, thể hiện dòng trống cho rõ
-        for (let j = pairs.length; j < 5; j++) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${j+1}</td><td>—</td><td>—</td><td class="small">—</td>`;
-          tbody.appendChild(tr);
-        }
-
-      } catch (err) {
-        console.error('Lỗi load pairs:', err);
-      }
+    async function loadData() {
+      const res = await fetch("/api/pairs");
+      const data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
     }
 
-    // load lần đầu và refresh mỗi 5s
-    loadPairs();
-    setInterval(loadPairs, 5000);
+    loadData();
   </script>
 </body>
 </html>
